@@ -38,7 +38,5 @@ public class ProductDTO {
 	public String getImgUrl() {
 		return imgUrl;
 	}
-	
-	
-	
+
 }
