@@ -31,8 +31,8 @@ public class ProductService {
 
 	@Transactional(readOnly = true)
 	// consulta paginada
-	public Page<ProductDTO> findAll(Pageable pageable) {
-		Page<Product> result = repository.findAll(pageable);
+	public Page<ProductDTO> findAll(String name, Pageable pageable) {
+		Page<Product> result = repository.searchByName(name, pageable);
 		return result.map(product -> new ProductDTO(product.getId(), product.getName(), product.getDescription(),
 				product.getPrice(), product.getImgUrl()));
 	}
