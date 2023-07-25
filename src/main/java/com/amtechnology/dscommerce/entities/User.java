@@ -2,10 +2,23 @@ package com.amtechnology.dscommerce.entities;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 @Entity
 @Table(name = "tb_user")
 public class User {
@@ -13,16 +26,20 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	
+
 	@Column(unique = true)
 	private String email;
 	private String phone;
 	private LocalDate birthDate;
 	private String password;
-	
+
 	@OneToMany(mappedBy = "client")
 	private List<Order> orders = new ArrayList<>();
-	
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "tb_user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles = new HashSet<>();
+
 	public User() {
 	}
 
@@ -83,10 +100,13 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
 
 	public List<Order> getOrders() {
 		return orders;
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
 	}
 
 	@Override
@@ -111,6 +131,5 @@ public class User {
 		return "User [id=" + id + ", name=" + name + ", email=" + email + ", phone=" + phone + ", birthDate="
 				+ birthDate + ", password=" + password + "]";
 	}
-	
-	
+
 }
