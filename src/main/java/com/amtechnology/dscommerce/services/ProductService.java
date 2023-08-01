@@ -1,5 +1,7 @@
 package com.amtechnology.dscommerce.services;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -9,12 +11,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.amtechnology.dscommerce.dto.ProductDTO;
+import com.amtechnology.dscommerce.dto.ProductMinDTO;
 import com.amtechnology.dscommerce.entities.Product;
 import com.amtechnology.dscommerce.repositories.ProductRepository;
 import com.amtechnology.dscommerce.services.exceptions.DatabaseException;
 import com.amtechnology.dscommerce.services.exceptions.ResourceNotFoundException;
-
-import javax.persistence.EntityNotFoundException;
 
 @Service
 public class ProductService {
@@ -31,10 +32,9 @@ public class ProductService {
 
 	@Transactional(readOnly = true)
 	// consulta paginada
-	public Page<ProductDTO> findAll(String name, Pageable pageable) {
+	public Page<ProductMinDTO> findAll(String name, Pageable pageable) {
 		Page<Product> result = repository.searchByName(name, pageable);
-		return result.map(product -> new ProductDTO(product.getId(), product.getName(), product.getDescription(),
-				product.getPrice(), product.getImgUrl()));
+		return result.map(product -> new ProductMinDTO(product));
 	}
 
 	@Transactional
